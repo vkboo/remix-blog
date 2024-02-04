@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { NextUIProvider } from '@nextui-org/react'
 import mainCSS from './main.css'
 
 export const links: LinksFunction = () => [
@@ -25,7 +26,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <NextUIProvider>
+          <Outlet />
+        </NextUIProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
