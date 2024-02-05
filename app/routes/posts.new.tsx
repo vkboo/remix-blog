@@ -43,7 +43,7 @@ export const action = async (c: ActionFunctionArgs) => {
         })
     }
 
-    prisma.post.create({
+    await prisma.post.create({
         data: {
             id: slug,
             title,
