@@ -1,6 +1,7 @@
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { Form } from "@remix-run/react";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, redirect, json } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
 import { prisma } from '~/prisma.server';
 
 export const action = async (c: ActionFunctionArgs) => {
@@ -8,6 +9,40 @@ export const action = async (c: ActionFunctionArgs) => {
     const slug = formData.get('slug') as string;
     const title = formData.get('title') as string;
     const content = formData.get('content') as string;
+
+    if (!slug) {
+        return json({
+            success: false,
+            errors: {
+                slug: 'Slug必须填写',
+                title: '',
+                content: '',
+            }
+        })
+    }
+
+    if (!title) {
+        return json({
+            success: false,
+            errors: {
+                slug: '',
+                title: 'Title必须填写',
+                content: '',
+            }
+        })
+    }
+
+    if (!content) {
+        return json({
+            success: false,
+            errors: {
+                slug: '',
+                title: '',
+                content: 'Content必须填写',
+            }
+        })
+    }
+
     prisma.post.create({
         data: {
             id: slug,
@@ -20,14 +55,32 @@ export const action = async (c: ActionFunctionArgs) => {
 }
 
 export default function Page() {
+    const actionData = useActionData<typeof action>();
+    const errors = actionData?.errors;
+
     return (
         <div>
             <Form method="POST">
                 <div className="flex flex-col gap-3 p-12">
                     <h1 className="text-xl font-black">发布文章</h1>
-                    <Input name="slug" label="slug" />
-                    <Input name="title" label="文章标题" />
-                    <Textarea name="content" label="内容" />
+                    <Input
+                        isInvalid={!!errors?.slug}
+                        errorMessage={errors?.slug}
+                        name="slug"
+                        label="slug"
+                    />
+                    <Input
+                        isInvalid={!!errors?.title}
+                        errorMessage={errors?.title}
+                        name="title"
+                        label="文章标题"
+                    />
+                    <Textarea
+                        isInvalid={!!errors?.content}
+                        errorMessage={errors?.content}
+                        name="content"
+                        label="内容"
+                    />
                     <Button type="submit" color="primary">
                         发布
                     </Button>
