@@ -1,7 +1,7 @@
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { Form } from "@remix-run/react";
 import { ActionFunctionArgs, redirect, json } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { useActionData, useNavigation } from "@remix-run/react";
 import { prisma } from '~/prisma.server';
 
 export const action = async (c: ActionFunctionArgs) => {
@@ -57,6 +57,7 @@ export const action = async (c: ActionFunctionArgs) => {
 export default function Page() {
     const actionData = useActionData<typeof action>();
     const errors = actionData?.errors;
+    const navigation = useNavigation();
 
     return (
         <div>
@@ -81,7 +82,7 @@ export default function Page() {
                         name="content"
                         label="内容"
                     />
-                    <Button type="submit" color="primary">
+                    <Button type="submit" color="primary" isLoading={navigation.state === 'submitting'}>
                         发布
                     </Button>
                 </div>
