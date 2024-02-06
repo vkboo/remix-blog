@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, Link } from '@remix-run/react'
 import { prisma } from '~/prisma.server'
 import ReactMarkdown from 'react-markdown'
 
@@ -25,6 +25,9 @@ export default function PostDetail() {
     const loaderData = useLoaderData<typeof loader>()
     return (
         <div className="p-12">
+            <div className="mb-3">
+                <Link to="edit" className="underline">编辑</Link>
+            </div>
             <div className="prose">
                 <h1>{loaderData.post.title}</h1>
                 <ReactMarkdown>{loaderData.post.content}</ReactMarkdown>
