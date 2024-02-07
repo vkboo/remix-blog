@@ -16,3 +16,8 @@ model Post {
   content    String
   created_at DateTime @default(now())
 }
+
+model User {
+  username String @id
+  password String
+}
