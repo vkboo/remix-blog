@@ -1,9 +1,15 @@
-import { LoaderFunctionArgs, ActionFunctionArgs, json, redirect } from '@remix-run/node';
-import { useLoaderData, Form, useNavigation, useFetcher } from '@remix-run/react';
+import { LoaderFunctionArgs, ActionFunctionArgs, json, redirect } from '@remix-run/node'
+import { useLoaderData, Form, useNavigation, useFetcher } from '@remix-run/react'
 import { prisma } from '~/prisma.server'
-import { Input, Button, Textarea } from '@nextui-org/react';
+import { Input, Button, Textarea } from '@nextui-org/react'
+import { auth } from '~/serssion.server'
 
 export const loader = async (c: LoaderFunctionArgs) => {
+    const user = await auth(c.request);
+    if (!user.username) {
+        return redirect('/');
+    }
+
     const postId = c.params.postId as string
     const post = await prisma.post.findUnique({
         where: {
@@ -22,7 +28,7 @@ export const loader = async (c: LoaderFunctionArgs) => {
 }
 
 export const action = async (c: ActionFunctionArgs) => {
-    const postId = c.params.postId as string;
+    const postId = c.params.postId as string
     const formData = await c.request.formData()
 
     const title = formData.get('title') as string
@@ -47,9 +53,9 @@ export default function Page() {
     const loaderData = useLoaderData<typeof loader>()
     const navigation = useNavigation()
 
-    const deleteFetcher = useFetcher();
+    const deleteFetcher = useFetcher()
 
-    const isUpdating = navigation.state === 'submitting' && navigation.formData?.get('action') === 'edit';
+    const isUpdating = navigation.state === 'submitting' && navigation.formData?.get('action') === 'edit'
     const isDeleting = deleteFetcher.state === 'submitting'
 
     return (

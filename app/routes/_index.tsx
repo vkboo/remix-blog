@@ -36,11 +36,12 @@ export default function Index() {
 
   return (
     <div className="p-12 space-y-4">
+      <Link to={'/posts/new'} className='underline'>新建文章</Link>
       <div className="flex flex-col gap-4">
         {loaderData.posts.map(post => {
           return (
             <div key={post.id}>
-              <Link to={`/posts/${post.id}`} className="text-xl">
+              <Link to={`/posts/${post.id}`} className="text-xl hover:underline hover:text-blue-500">
                 {post.title}
               </Link>
               <div className="text-sm text-gray-400">
